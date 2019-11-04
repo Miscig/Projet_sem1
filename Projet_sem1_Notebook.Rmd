@@ -1,5 +1,5 @@
 ---
-title: "Methodes avancees de modelisation : Projet Semaine 1"
+title: "Méthodes avancées de modélisation : Projet Semaine 1"
 output: html_notebook
 ---
 
@@ -7,12 +7,12 @@ output: html_notebook
 
 &nbsp;
 
-# Enonce
+# Enoncé
 
 
 &nbsp;
 
-On tire a pile ou face 100 fois avec une piece de monnaie. Les tirages sont supposés independants et le nombre de "pile" suit une loi binomiale.
+On tire a pile ou face 100 fois avec une pièce de monnaie. Les tirages sont supposés independants et le nombre de "pile" suit une loi binomiale.
 
 
 
@@ -20,8 +20,8 @@ On tire a pile ou face 100 fois avec une piece de monnaie. Les tirages sont supp
 
 ## Question 1 :
 
-D'apres l'enonce, la piece est parfaitement equilibre. Les tirages sont indépendants, et le nombre de "pile" suit une Loi binomiale. Ainsi X (tomber sur "pile") suit une loi binomiale B(100, 0.5).
-Grace a la fonction dbinom qui donne la distribution de densite de probabilite de la loi binomial, il nous suffit de sommer chaque densites entre 45 et 65 (notre intervalle de tires).  
+D'après l'énoncé, la pièce est parfaitement équilibre. Les tirages sont indépendants, et le nombre de "pile" suit une Loi binomiale. Ainsi X (tomber sur "pile") suit une loi binomiale B(100, 0.5).
+Grâce a la fonction dbinom qui donne la distribution de densité de probabilité de la loi binomial, il nous suffit de sommer chaque densités entre 45 et 65 (notre intervalle de tires).  
 
 ```{r}
 n <- 100            
@@ -32,15 +32,15 @@ sum(dbinom(45:65, n, prob_equi))
 ```
 &nbsp;
 
-La probabilite pour que la piece tombe sur pile entre 45 et 65 fois (inclus) est de 0.8634785
+La probabilité pour que la pièce tombe sur pile entre 45 et 65 fois (inclus) est de 0.8634785
 
 
 &nbsp;
 
 ## Question 2 :
 
-Comme la piece est desequilibre, la probabilite pour qu'elle tombe sur "pile" est de 0.6. Ainsi X (tomber sur "pile") suit une loi binomiale B(100, 0.6).  
-Grace a la fonction dbinom qui donne la distribution de densite de probabilite de la loi binomial, il nous suffit de sommer chaque densites entre 45 et 65 (notre intervalle de tires).
+Comme la pièce est déséquilibre, la probabilité pour qu'elle tombe sur "pile" est de 0.6. Ainsi X (tomber sur "pile") suit une loi binomiale B(100, 0.6).  
+Grâce a la fonction dbinom qui donne la distribution de densité de probabilité de la loi binomial, il nous suffit de sommer chaque densités entre 45 et 65 (notre intervalle de tires).
 
 ```{r}
 n <- 100            
@@ -51,7 +51,7 @@ sum(dbinom(45:65, n, prob_equi))
 ```
 &nbsp;
 
-La probabilite pour que la piece tombe sur pile entre 45 et 65 fois (inclus) est de 0.8687817
+La probabilité pour que la pièce tombe sur pile entre 45 et 65 fois (inclus) est de 0.8687817
 
 
 
