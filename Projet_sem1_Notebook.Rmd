@@ -15,6 +15,7 @@ output: html_notebook
 On tire a pile ou face 100 fois avec une piece de monnaie. Les tirages sont supposés independants et le nombre de "pile" suit une loi binomiale.
 
 
+
 &nbsp;
 
 ## Question 1 :
