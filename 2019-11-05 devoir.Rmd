@@ -9,6 +9,10 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+123
+```
+
 # Énoncé
 
 On tire à pile ou face 100 fois avec une pièce de monnaie. Les tirages sont supposés indépendants et le nombre de "pile" suit une loi binomiale.
