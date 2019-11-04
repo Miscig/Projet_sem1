@@ -1,0 +1,64 @@
+---
+title: "Méthodes avancées de modélisation : Projet Semaine 1"
+output: html_notebook
+---
+
+
+
+&nbsp;
+
+# Enoncé
+
+
+&nbsp;
+
+On tire a pile ou face 100 fois avec une pièce de monnaie. Les tirages sont supposés independants et le nombre de "pile" suit une loi binomiale.
+
+
+
+&nbsp;
+
+## Question 1 :
+
+D'après l'énoncé, la pièce est parfaitement équilibre. Les tirages sont indépendants, et le nombre de "pile" suit une Loi binomiale. Ainsi X (tomber sur "pile") suit une loi binomiale B(100, 0.5).
+Grâce a la fonction dbinom qui donne la distribution de densité de probabilité de la loi binomial, il nous suffit de sommer chaque densités entre 45 et 65 (notre intervalle de tires).  
+
+```{r}
+n <- 100            
+prob_equi <- 0.5    
+
+library(graphics)
+sum(dbinom(45:65, n, prob_equi))   
+```
+&nbsp;
+
+La probabilité pour que la pièce tombe sur pile entre 45 et 65 fois (inclus) est de 0.8634785
+
+
+&nbsp;
+
+## Question 2 :
+
+Comme la pièce est déséquilibre, la probabilité pour qu'elle tombe sur "pile" est de 0.6. Ainsi X (tomber sur "pile") suit une loi binomiale B(100, 0.6).  
+Grâce a la fonction dbinom qui donne la distribution de densité de probabilité de la loi binomial, il nous suffit de sommer chaque densités entre 45 et 65 (notre intervalle de tires).
+
+```{r}
+n <- 100            
+prob_equi <- 0.6    
+
+library(graphics)
+sum(dbinom(45:65, n, prob_equi))   
+```
+&nbsp;
+
+La probabilité pour que la pièce tombe sur pile entre 45 et 65 fois (inclus) est de 0.8687817
+
+
+
+
+
+
+
+
+
+
