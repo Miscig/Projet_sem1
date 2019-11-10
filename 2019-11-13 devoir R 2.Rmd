@@ -1,10 +1,11 @@
 ---
 title: "Devoir `tidyverse` pour le 13 novembre"
-output: 
-  html_notebook: 
+output:
+  html_notebook:
     highlight: tango
     number_sections: yes
     theme: cerulean
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -23,12 +24,27 @@ library(gapminder)
 
 # D'après le tableau `gapminder`,  créer une variable `gdp` correspondant au PIB total du pays (PIB / habitant * population)
 ```{r}
+head(gapminder)
 
+gapminder <- gapminder %>%
+  mutate (gdp = gdpPercap * pop)
 
 ```
 
 # Pour chaque pays, filter les 2 années correspondant au `gdp` minimal et maximal
 ```{r}
+
+# Pour le GDP maximal par pays
+gapminder %>%
+  group_by(country) %>%
+  filter(gdp == max(gdp)) %>%
+  summarise(year, gdp)
+
+# Pour le GDP minimal par pays
+gapminder %>%
+  group_by(country) %>%
+  filter(gdp == min(gdp)) %>%
+  summarise(year, gdp)
 
 
 ```
@@ -36,24 +52,73 @@ library(gapminder)
 # Ajouter au tableau précédent une variable `min_max` ayant pour valeur `min` ou `max` selon que l'année correspond au PIB minimal ou maximal pour ce pays et supprimer les variables `pop`, et `gdpPercap`.
 ```{r}
 
+# tab avec données min et max
+max <- gapminder %>%
+  group_by(country) %>%
+  filter(gdp == max(gdp))
+
+print(max)
+
+min <- gapminder %>%
+  group_by(country) %>%
+  filter(gdp == min(gdp))
+
+print(min)
+
+
+# ajout de la variable min_max aux 2 tableaux
+min <- min %>%
+  mutate(min_max = rep("min"))
+
+print(min)
+
+
+max <- max %>%
+  mutate(min_max = rep("max"))
+
+print(max)
+
+# rassemblement des 2 tableaux en 1
+tab <- rbind(min, max)
+
+# Suppression des variables pop et gdpPercap
+tab <- tab %>%
+  select(-gdpPercap, -pop)
+
+print(tab)
 
 ```
 
 # À l'aide de la fonction [`pivot_wider`](https://tidyr.tidyverse.org/reference/pivot_wider.html), reformatez le tableau avec une ligne par pays, deux variables indiquant l'année du PIB min / max et deux variables indiquant les valeurs de PIB correspondantes.
 ```{r}
+tab <- tab %>%
+  pivot_wider(id_cols = country, names_from = min_max, values_from = c(year, gdp))
 
+print(tab)
 
 ```
 
 # À partir du tableau `gapminder`, tracer sur une même figure un boxplot de l'espérance de vie pour 1952 et un autre pour l'année 2007 (aide disponible sur la page [https://ggplot2.tidyverse.org/](https://ggplot2.tidyverse.org/)
 ```{r}
+library(ggplot2)
 
+gapminder %>%
+  filter(year %in% c(1952, 2007)) %>%
+  ggplot(aes(x = year, y = lifeExp, group = year)) +
+  geom_boxplot() +
+  theme_bw()
 
 ```
 
 # Réaliser une figure représentant, pour les 5 continents, les 2 boxplots de 1952 et 2007 côte à côte.
 ```{r}
 
+gapminder %>%
+  filter(year %in% c(1952, 2007)) %>%
+  ggplot(aes(x = year, y = lifeExp, group = year)) +
+  geom_boxplot() +
+  theme_bw() +
+  facet_wrap(~continent)
 
 ```
 
