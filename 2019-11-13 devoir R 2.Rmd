@@ -124,7 +124,14 @@ gapminder %>%
 
 # Trouver une représentation graphique représentant, pour chaque continent, l'évolution de l'espérance de vie médiane au cours du temps et permettant si possible de comparer cette évolution entre les continents.
 ```{r}
+gapminder <-gapminder %>% 
+  group_by(year,continent) %>%  
+  mutate(lifeExp_median=median(lifeExp))
 
+gapminder %>%
+  ggplot(aes(x=year,y=lifeExp_median,color=continent))+
+  geom_line() +
+  theme_bw()
 
 ```
 
