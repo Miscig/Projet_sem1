@@ -53,14 +53,40 @@ Indice :
 - ou on peut plus simplement considérer que l'anniversaire de la première personne peut être notée "1" si on choisit de commencer à compter les jours à partir de cette date, et juste tirer au sort un entier correspondant à l'anniversaire de la deuxième personne.
 
 ```{r}
+set.seed(2004)
 
+date <- matrix (1, nrow=10000, ncol=3)
+date <- as.data.frame(date)
+colnames(date) <- c("date_1", "date_2", "pareil")
+
+for (i in 1:10000){
+  date[i,1:2] <- sample(365, size = 2, replace = TRUE)
+  if(date[i,1] == date[i,2]){
+    date[i,3] <- 1
+  }else{
+    date[i,3] <- 0
+  }
+}
+
+proba <- mean(date[,3])
+proba
 ```
 
 ### Question 2
 Soit un groupe de $n$ personnes.
 Pour $n \in \left\{ 2, 10, 200 \right\}$, tirer au sort la date anniversaire de ces $n$ personnes et déterminer, dans chaque cas de figure, si une date anniversaire est commune à 2 personnes.
 ```{r}
+set.seed(2004)
 
+date2_n2 <- sample(365, size = 2, replace = TRUE)   #tirage au sort anniv grp 2 pers
+date2_n10 <- sample(365, size = 10, replace = TRUE)   #tirage au sort anniv grp 10 pers
+date2_n200 <- sample(365, size = 200, replace = TRUE)   #tirage au sort anniv grp 200 pers
+
+any(table(date2_n2) == 2)    #pour 2pers -> FALSE
+any(table(date2_n10) == 2)   #pour 10pers -> FALSE
+any(table(date2_n200) == 2)  #pour 200pers -> TRUE, au moins une date d'anniversaire communes à 2 personnes
+
+print(which(table(date2_n200) == 2))  #liste des dates d'anniversaire communes à 2 personnes
 ```
 
 ### Question 3
@@ -83,7 +109,14 @@ f1(100)
 ```
 
 ```{r}
+f1 <- function(n) {
+  any(table(sample(365, size = n, replace = TRUE)) == 2)
+}
 
+# Exemples :
+f1(2)
+f1(10)
+f1(200)
 ```
 
 ### Question 4
@@ -91,7 +124,18 @@ Soit un groupe de $n$ personnes.
 Pour $n \in \left\{2, 10, 200 \right\}$, tirer au sort la date anniversaire de ces $n$ personnes et déterminer, dans chaque cas de figure, si une date anniversaire est commune à 3 personnes.
 
 ```{r}
+# on refait pareil que pour la question 2 :
+set.seed(2004)
 
+date4_n2 <- sample(365, size = 2, replace = TRUE)   #tirage au sort anniv grp 2 pers
+date4_n10 <- sample(365, size = 10, replace = TRUE)   #tirage au sort anniv grp 10 pers
+date4_n200 <- sample(365, size = 200, replace = TRUE)   #tirage au sort anniv grp 200 pers
+
+any(table(date4_n2) == 3)    #pour 2pers -> FALSE
+any(table(date4_n10) == 3)   #pour 10pers -> FALSE
+any(table(date4_n200) == 3)  #pour 200pers -> TRUE, au moins une date d'anniversaire communes à 3 personnes
+
+print(which(table(date4_n200) == 3))  #liste des dates d'anniversaire communes à 3 personnes
 ```
 
 
@@ -115,7 +159,14 @@ f2(100)
 ```
 
 ```{r}
+f2 <- function(n) {
+  any(table(sample(365, size = n, replace = TRUE)) == 3)
+}
 
+# Exemples :
+f2(2)
+f2(10)
+f2(200)
 ```
 
 ### Question 6
@@ -149,6 +200,19 @@ f3(n = 100, k = c(2, 3))
 ```
 
 ```{r}
+f3 <- function(n, k) {
+  x <- matrix(1, ncol = 2, nrow = 1)
+  x <- as.data.frame(x)
+  colnames(x) <- c("2", "3")
+  x[,1] <- any(table(sample(365, size = n, replace = TRUE)) == k[1])
+  x[,2] <- any(table(sample(365, size = n, replace = TRUE)) == k[2])
+  return(x)
+}
+
+# Exemples :
+f3(n = 2, k = c(2,3))
+f3(n = 10, k = c(2,3))
+f3(n = 200, k = c(2,3))
 
 ```
 
@@ -175,7 +239,19 @@ f4(n = 20, k = c(2, 3), rep = 5)
 ```
 
 ```{r}
+f4 <- function(n, k, rep) {
+  x <- matrix(1, ncol = length(k), nrow = rep)
+  x <- as.data.frame(x)
+  colnames(x) <- c("2", "3")
+  for(i in 1:rep){
+    x[i,1] <- any(table(sample(365, size = n, replace = TRUE)) == k[1])
+    x[i,2] <- any(table(sample(365, size = n, replace = TRUE)) == k[2])
+  }
+  return(x)
+}
 
+# Exemples :
+f4(n = 20, k = c(2,3), rep = 5)
 ```
 
 ### Question 8
@@ -196,7 +272,21 @@ f5(n = 20, k = c(2, 3), rep = 1000)
 ```
 
 ```{r}
+f5 <- function(n, k, rep) {
+  x <- matrix(1, ncol = length(k), nrow = rep)
+  x <- as.data.frame(x)
+  colnames(x) <- c("2", "3")
+  for(i in 1:rep){
+    x[i,1] <- any(table(sample(365, size = n, replace = TRUE)) == k[1])
+    x[i,2] <- any(table(sample(365, size = n, replace = TRUE)) == k[2])
+  }
+  print(x_2 <- mean(x[,1]))
+  print(x_3 <- mean(x[,2]))
+  return(x)
+}
 
+# Exemples :
+f5(n = 20, k = c(2,3), rep = 5)
 ```
 
 ### Question 9
