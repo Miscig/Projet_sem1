@@ -450,17 +450,17 @@ f7 <- function(n, k, rep){
 
 f7(n = c(2, 10, 200), k = c(2, 3, 4, 5), rep = 1000)
 
-echantillon <- f7(n = c(2, 10, 200), k = c(2, 3, 4, 5), rep = 1000)
+echantillon <- f7(n = c(2, 10, 200, 500), k = c(2, 3, 4, 5), rep = 1000)
 str(echantillon)
 
 echantillon$n <- as.factor(echantillon$n)
 echantillon$k <- as.factor(echantillon$k)
   
 echantillon %>%
-  ggplot(aes(k, prop)) +
+  ggplot(aes(k, prop, col = k, fill = k)) +
   geom_bar(stat = "identity") +
   facet_wrap(~ n) +
-  xlab("Anniversaire commun à k personnes") +
+  xlab("Anniversaire commun à K personnes") +
   ylab("Proportion")
 ```
 
