@@ -135,7 +135,7 @@ any(table(date4_n2) == 3)    #pour 2pers -> FALSE
 any(table(date4_n10) == 3)   #pour 10pers -> FALSE
 any(table(date4_n200) == 3)  #pour 200pers -> TRUE, au moins une date d'anniversaire communes à 3 personnes
 
-print(which(table(date4_n200) == 3))  #liste des dates d'anniversaire communes à 3 personnes
+print(which(table(date4_n200) == 3))  #liste des dates d'anniversaire communes à 3 personnes pour n = 200
 ```
 
 
@@ -200,14 +200,21 @@ f3(n = 100, k = c(2, 3))
 ```
 
 ```{r}
-f3 <- function(n, k) {
-  x <- matrix(1, ncol = 2, nrow = 1)
-  x <- as.data.frame(x)
-  colnames(x) <- c("2", "3")
-  x[,1] <- any(table(sample(365, size = n, replace = TRUE)) == k[1])
-  x[,2] <- any(table(sample(365, size = n, replace = TRUE)) == k[2])
-  return(x)
+set.seed(104)
+
+library(dplyr)
+library(broom)
+
+f3 <- function(n, k){
+  df <- tibble()
+  lk <- length(k)
+  for (i in 1:lk){
+    df [1,i] <- any(table(sample(365, size = n, replace = TRUE)) == k[i]) 
+  }
+  colnames(df) <- k
+  return(df)
 }
+
 
 # Exemples :
 f3(n = 2, k = c(2,3))
@@ -239,19 +246,25 @@ f4(n = 20, k = c(2, 3), rep = 5)
 ```
 
 ```{r}
-f4 <- function(n, k, rep) {
-  x <- matrix(1, ncol = length(k), nrow = rep)
-  x <- as.data.frame(x)
-  colnames(x) <- c("2", "3")
-  for(i in 1:rep){
-    x[i,1] <- any(table(sample(365, size = n, replace = TRUE)) == k[1])
-    x[i,2] <- any(table(sample(365, size = n, replace = TRUE)) == k[2])
+set.seed(15)
+
+library(dplyr)
+library(broom)
+library(purrr)
+
+f4 <- function(n, k, rep){
+  df <- tibble()
+  lk <- length(lk)
+  for (i in 1:rep){
+    for(z in 1:lk){
+      df [i,z] <- any(table(sample(365, size = n, replace = TRUE)) == k[z]) 
+    }
   }
-  return(x)
+  colnames(df) <- k
+  return(df)
 }
 
-# Exemples :
-f4(n = 20, k = c(2,3), rep = 5)
+f4(n = 20, k = c(2, 3), rep = 5)
 ```
 
 ### Question 8
@@ -272,21 +285,28 @@ f5(n = 20, k = c(2, 3), rep = 1000)
 ```
 
 ```{r}
-f5 <- function(n, k, rep) {
-  x <- matrix(1, ncol = length(k), nrow = rep)
-  x <- as.data.frame(x)
-  colnames(x) <- c("2", "3")
-  for(i in 1:rep){
-    x[i,1] <- any(table(sample(365, size = n, replace = TRUE)) == k[1])
-    x[i,2] <- any(table(sample(365, size = n, replace = TRUE)) == k[2])
+set.seed(15)
+
+library(dplyr)
+library(broom)
+library(purrr)
+
+f5 <- function(n, k, rep){
+  df <- tibble()
+  lk <- length(k)
+  for (i in 1:rep){
+    for(z in 1:lk){
+      df [i,z] <- any(table(sample(365, size = n, replace = TRUE)) == k[z]) 
+    }
   }
-  print(x_2 <- mean(x[,1]))
-  print(x_3 <- mean(x[,2]))
-  return(x)
+  colnames(df) <- k
+  df <- df %>% map_df(mean)
+  return(df)
 }
 
-# Exemples :
-f5(n = 20, k = c(2,3), rep = 5)
+f5(n = 2, k = c(2, 3), rep = 1000)
+f5(n = 10, k = c(2, 3), rep = 1000)
+f5(n = 200, k = c(2, 3), rep = 1000)
 ```
 
 ### Question 9
@@ -310,7 +330,31 @@ f6(n = 20, k = c(2, 3), rep = 1000)
 # 3   100  1     0.68
 ```
 ```{r}
+set.seed(15)
 
+library(dplyr)
+library(broom)
+library(purrr)
+
+f6 <- function(n, k, rep){
+  df <- tibble()
+  moy <- tibble()
+  lk <- length(k)
+  for(y in 1:length(n)){
+     moy[y,1] <- n[y]
+    for (i in 1:rep){
+      for(z in 1:lk){
+        df [i,z] <- any(table(sample(365, size = n[y], replace = TRUE)) == k[z]) 
+      }
+      colnames(df) <- k
+    }
+    moy[y,2:(lk+1)] <- df %>% map_df(mean)
+  }
+  colnames(moy) <- c("n",k)
+  return(moy)
+}
+
+f6(n = c(2, 10, 200), k = c(2, 3), rep = 1000)
 ```
 
 ### Question 10
@@ -337,7 +381,35 @@ f7(n = 20, k = c(2, 3), rep = 1000)
 ```
 
 ```{r}
+set.seed(15)
 
+library(dplyr)
+library(broom)
+library(purrr)
+library(tidyverse)
+
+f7 <- function(n, k, rep){
+  df <- tibble()
+  moy <- tibble()
+  lk <- length(k)
+  for(y in 1:length(n)){
+     moy[y,1] <- n[y]
+    for (i in 1:rep){
+      for(z in 1:lk){
+        df [i,z] <- any(table(sample(365, size = n[y], replace = TRUE)) == k[z]) 
+      }
+      colnames(df) <- k
+    }
+    moy[y,2:(lk+1)] <- df %>% map_df(mean)
+  }
+  colnames(moy) <- c("n",k)
+  moy <- moy %>%
+    gather(variable, value, -n)
+  colnames(moy) <- c("n", "k", "prop")
+  return(moy)
+}
+
+f7(n = c(2, 10, 200), k = c(2, 3), rep = 1000)
 ```
 
 ### Question 11
@@ -347,7 +419,49 @@ La figure devra représenter plusieurs valeurs de `k` et ne `n` (pas forcément 
 Vous pouvez faire plusieurs propositions de figures si besoin.
 
 ```{r}
+set.seed(15)
 
+library(dplyr)
+library(broom)
+library(purrr)
+library(tidyverse)
+
+f7 <- function(n, k, rep){
+  df <- tibble()
+  moy <- tibble()
+  lk <- length(k)
+  ln <- length(n)
+  for(y in 1:ln){
+     moy[y,1] <- n[y]
+    for (i in 1:rep){
+      for(z in 1:lk){
+        df [i,z] <- any(table(sample(365, size = n[y], replace = TRUE)) == k[z]) 
+      }
+      colnames(df) <- k
+    }
+    moy[y,2:(lk+1)] <- df %>% map_df(mean)
+  }
+  colnames(moy) <- c("n", k)
+  moy <- moy %>%
+    gather(variable, value, -n)
+  colnames(moy) <- c("n", "k", "prop")
+  return(moy)
+}
+
+f7(n = c(2, 10, 200), k = c(2, 3, 4, 5), rep = 1000)
+
+echantillon <- f7(n = c(2, 10, 200), k = c(2, 3, 4, 5), rep = 1000)
+str(echantillon)
+
+echantillon$n <- as.factor(echantillon$n)
+echantillon$k <- as.factor(echantillon$k)
+  
+echantillon %>%
+  ggplot(aes(k, prop)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ n) +
+  xlab("Anniversaire commun à k personnes") +
+  ylab("Proportion")
 ```
 
 
